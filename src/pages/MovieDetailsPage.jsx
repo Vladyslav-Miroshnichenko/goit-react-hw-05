@@ -1,10 +1,12 @@
-import React, { useEffect, useState } from "react";
-import { useParams, Outlet, Link } from "react-router-dom";
+import React, { useEffect, useRef, useState } from "react";
+import { useParams, Outlet, Link, useLocation } from "react-router-dom";
 import { fetchMovieDetails } from "../api";
 
 const MovieDetailsPage = () => {
   const { movieId } = useParams();
   const [movie, setMovie] = useState(null);
+  const location = useLocation();
+  const prevLocationRef = useRef(location.state?.from);
 
   useEffect(() => {
     fetchMovieDetails(movieId).then(setMovie);
@@ -14,7 +16,7 @@ const MovieDetailsPage = () => {
 
   return (
     <div>
-      <Link to="/">Go Back</Link>
+      <Link to={prevLocationRef.current || "/"}>Go Back</Link>
       <h1>{movie.title}</h1>
       <img
         src={`https://image.tmdb.org/t/p/w500/${movie.poster_path}`}
